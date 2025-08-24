@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>CORS Helper Pro Plus — Options</title>
+  <style>
+    :root {
+      --bg:#fff; --text:#111; --muted:#666; --border:#eee;
+    }
+    @media (prefers-color-scheme: dark){
+      :root { --bg:#121212; --text:#eaeaea; --muted:#aaa; --border:#2a2a2a; }
+    }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial; background:var(--bg); color:var(--text); margin:0; padding:20px; max-width:880px; }
+    h1 { font-size:20px; margin:0 0 12px; }
+    h2 { font-size:16px; margin-top:18px; }
+    input[type=text], textarea, select { width: 420px; padding:8px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text); }
+    button { padding: 8px 10px; border-radius: 10px; border: 0; cursor: pointer; }
+    .primary { background: #1e88e5; color: #fff; }
+    .ghost { background:#2a2a2a0f; color:var(--text); border:1px solid var(--border); }
+    .row { display:flex; gap:8px; align-items:center; margin:8px 0; flex-wrap: wrap; }
+    ul { list-style:none; padding:0; }
+    li { margin:6px 0; display:flex; align-items:center; gap:8px; }
+    code { background:#f6f8fa; padding:2px 6px; border-radius:6px; }
+    .muted { color:var(--muted); font-size:12px; }
+    .box { border:1px solid var(--border); border-radius:12px; padding:12px; margin-top:10px;}
+    .grid { display:grid; grid-template-columns: 1fr 1fr; gap:18px; }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    .presetRow button { margin-right:6px; }
+    .wizard { border:1px dashed var(--border); padding:12px; border-radius:10px; margin-bottom:12px; }
+  </style>
+</head>
+<body>
+  <h1>CORS Helper Pro Plus — Options</h1>
+
+  <div id="wizard" class="wizard" style="display:none;">
+    <h2>First-time Setup</h2>
+    <p class="muted">Safer defaults: <b>Allowlist only</b> mode is recommended.</p>
+    <div class="row">
+      <label>Mode: </label>
+      <select id="modeSel">
+        <option value="allowlist">Allowlist only (recommended)</option>
+        <option value="global">Global (use with timer)</option>
+      </select>
+    </div>
+    <div class="row presetRow" id="presetRow"></div>
+    <div class="row">
+      <input id="domain" type="text" placeholder="api.example.com or https://api.local.test:4000"/>
+      <button id="add" class="ghost">Add Domain</button>
+    </div>
+    <div class="row">
+      <label>Default enable timer:</label>
+      <select id="defaultTimer">
+        <option value="10">10 minutes</option>
+        <option value="30">30 minutes</option>
+        <option value="120">2 hours</option>
+        <option value="0">No timer</option>
+      </select>
+    </div>
+    <button id="finish" class="primary">Finish</button>
+  </div>
+
+  <div class="grid">
+    <div class="box">
+      <h2>Profiles & Allowlist</h2>
+      <div class="row">
+        <label>Active profile:</label>
+        <select id="profile"></select>
+        <button id="newProfile" class="ghost">+ Profile</button>
+        <button id="delProfile" class="ghost">Delete Profile</button>
+      </div>
+      <div class="row">
+        <input id="addDomain" type="text" placeholder="api.example.com or https://api.local.test:4000"/>
+        <button id="addBtn" class="primary">Add Domain</button>
+      </div>
+      <div class="row presetRow" id="presetRow2"></div>
+      <ul id="list"></ul>
+      <div class="row">
+        <button id="clear" class="ghost">Clear Allowlist</button>
+      </div>
+      <div class="row">
+        <button id="export" class="ghost">Export JSON</button>
+        <input type="file" id="importFile" accept="application/json"/>
+        <button id="importBtn" class="ghost">Import</button>
+      </div>
+      <p class="muted">If allowlist is empty, enabling from the popup uses a timer by default.</p>
+    </div>
+
+    <div class="box">
+      <h2>Test Console</h2>
+      <div class="row">
+        <input id="testUrl" type="text" placeholder="http://localhost:5001/endpoint"/>
+        <select id="method">
+          <option>GET</option>
+          <option>POST</option>
+          <option>PUT</option>
+          <option>PATCH</option>
+          <option>DELETE</option>
+        </select>
+        <button id="runTest" class="primary">Run</button>
+      </div>
+      <div class="row">
+        <label><input type="checkbox" id="addHeader"/> Add custom header (triggers preflight)</label>
+      </div>
+      <pre id="out" class="box" style="max-height:280px; overflow:auto;"></pre>
+      <p class="muted">If preflight (OPTIONS) returns non-2xx, the server must be fixed.</p>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

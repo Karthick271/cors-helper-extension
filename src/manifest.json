@@ -1,0 +1,32 @@
+{
+  "name": "CORS Helper Pro Plus (Dev)",
+  "version": "3.3.2",
+  "manifest_version": 3,
+  "description": "Dev-only CORS helper with profiles, allowlist, auto-off timer, debug logs, onboarding, and presets.",
+  "permissions": [
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess",
+    "declarativeNetRequestFeedback",
+    "storage",
+    "alarms",
+    "contextMenus",
+    "webRequest"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_title": "CORS Helper Pro Plus",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_page": "options.html",
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  }
+}

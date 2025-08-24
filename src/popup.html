@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>CORS Helper Pro Plus</title>
+  <style>
+    :root{
+      --bg:#fff; --text:#0f172a; --muted:#64748b; --border:#e2e8f0;
+      --accent:#2563eb; --amber:#f59e0b;
+      --ok:#16a34a; --warn:#f59e0b; --err:#dc2626; --info:#0ea5e9;
+      --chip-r:999px; --r:12px; --shadow:0 1px 2px rgba(0,0,0,.06);
+    }
+    @media (prefers-color-scheme: dark){
+      :root{ --bg:#111827; --text:#e5e7eb; --muted:#9ca3af; --border:#1f2937; --accent:#3b82f6; }
+    }
+    *{ box-sizing:border-box; }
+    body{ background:var(--bg); color:var(--text); margin:0; padding:14px; width:380px; font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Arial; }
+    h1{ font-size:16px; margin:0 0 10px; display:flex; align-items:center; justify-content:space-between; }
+    .row{ display:flex; gap:10px; align-items:center; margin-top:10px; flex-wrap:wrap; }
+    .btn{ padding:8px 10px; border-radius:var(--r); border:1px solid var(--border); background:transparent; color:var(--text); }
+    .btn.ghost{ background:color-mix(in srgb, var(--bg) 85%, #000 15%); }
+    .chip{ padding:6px 10px; border-radius:var(--chip-r); font-size:12px; font-weight:600; border:1px solid var(--border) }
+    .chip.off{ background:#f1f5f9; color:#0f172a; }
+    .chip.on-allow{ background:var(--accent); color:#fff; border-color:transparent; }
+    .chip.on-global{ background:var(--amber); color:#111; border-color:transparent; }
+    .muted{ color:var(--muted); font-size:12px; }
+
+    /* Switch */
+    .switch{ display:flex; align-items:center; gap:8px; cursor:pointer; }
+    .switch input{ appearance:none; width:46px; height:26px; border-radius:26px; background:#e2e8f0; border:1px solid var(--border); position:relative; outline:none; transition:background .15s ease; }
+    .switch input::after{ content:""; position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%; background:#fff; box-shadow:var(--shadow); transition:transform .15s ease; }
+    .switch input:checked{ background:var(--accent); }
+    .switch input:checked::after{ transform:translateX(20px); }
+    .switch-label{ font-size:12px; color:var(--muted); min-width:64px; }
+
+    /* Segmented */
+    .segment{ display:flex; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+    .segment button{ background:transparent; border:0; padding:6px 10px; font:12px system-ui; color:var(--text); }
+    .segment button:not(:last-child){ border-right:1px solid var(--border); }
+    .segment button:focus-visible{ outline:2px solid var(--accent); outline-offset:-2px; }
+
+    /* Logs */
+    .logs{ margin-top:12px; max-height:240px; overflow:auto; border-top:1px solid var(--border); padding-top:8px; }
+    .log{ font:12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; background:color-mix(in srgb, var(--bg) 92%, #000 8%); border:1px solid var(--border); border-radius:10px; padding:6px; box-shadow:var(--shadow); margin-bottom:6px; }
+    .dot{ width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:6px; vertical-align:middle; }
+    .ok{ background:var(--ok);} .warn{ background:var(--warn);} .err{ background:var(--err);} .info{ background:var(--info); }
+    select{ padding:6px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text); }
+  
+    /* Pointer + hover states */
+    .btn, .segment button, .switch, .switch input, #openOptions { cursor: pointer; }
+    .btn:hover, .segment button:hover { background: color-mix(in srgb, var(--bg) 80%, #000 20%); }
+    .segment button:active { background: color-mix(in srgb, var(--bg) 75%, #000 25%); }
+
+    /* Modal */
+    .modal{ position:fixed; inset:0; background:rgba(0,0,0,.36); display:none; align-items:center; justify-content:center; }
+    .modal.show{ display:flex; }
+    .dialog{ background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:12px; width:320px; padding:14px; box-shadow:0 10px 30px rgba(0,0,0,.25); }
+    .dialog h2{ font-size:14px; margin:0 0 10px; }
+    .dialog .row{ margin-top:8px; }
+    .dialog input{ width:100%; padding:8px; border-radius:10px; border:1px solid var(--border); background:var(--bg); color:var(--text); }
+    .dialog .actions{ display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
+  </style>
+</head>
+<body>
+  <h1>
+    CORS Helper <span id="chip" class="chip off">OFF</span>
+    <button id="openOptions" class="btn ghost">Options</button>
+  </h1>
+
+  <div class="row" role="group" aria-label="Master enable and duration">
+    <label class="switch" aria-label="Master enable">
+      <input id="masterToggle" type="checkbox" role="switch" aria-checked="false" />
+      <span class="switch-label" id="switchLabel">Disabled</span>
+    </label>
+
+    <div class="segment" role="group" aria-label="Enable duration">
+      <button id="enable10">10m</button>
+      <button id="enable30">30m</button>
+      <button id="enable120">2h</button>
+      <button id="enableInf">∞</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <select id="profile"></select>
+    <button id="addProfile" class="btn">+ Profile</button>
+    <button id="allowTab" class="btn">Allow Active Tab</button>
+  </div>
+
+  <div id="status" class="muted" style="margin-top:6px;"></div>
+
+  <div class="logs" id="logs"></div>
+
+  <div class="row">
+    <button id="clearLogs" class="btn">Clear Logs</button>
+  </div>
+
+  
+  <div id="profileModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
+    <div class="dialog">
+      <h2 id="profileTitle">New profile</h2>
+      <div class="row">
+        <input id="profileNameInput" type="text" placeholder="e.g. Client A Staging" />
+      </div>
+      <div class="actions">
+        <button class="btn" id="cancelProfile">Cancel</button>
+        <button class="btn" id="saveProfile">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+
+</body>
+</html>
